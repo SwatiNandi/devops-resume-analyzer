@@ -8,7 +8,8 @@ pipeline {
 
             steps {
 
-                git 'https://github.com/SwatiNandi/devops-resume-analyzer.git'
+                git branch: 'main',
+                url: 'https://github.com/SwatiNandi/devops-resume-analyzer.git'
 
             }
 
