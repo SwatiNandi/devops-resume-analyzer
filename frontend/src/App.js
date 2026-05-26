@@ -1,11 +1,18 @@
-import HelloWorld from "./HelloWorld";
+import React from 'react';
+import ResumeUpload from './pages/ResumeUpload';
 
 function App() {
-  return (
-    <div>
-      <HelloWorld />
-    </div>
-  );
+
+    return (
+
+        <div>
+
+            <ResumeUpload />
+
+        </div>
+
+    );
+
 }
 
 export default App;

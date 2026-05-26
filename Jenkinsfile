@@ -1,25 +1,40 @@
 pipeline {
+
     agent any
 
     stages {
 
         stage('Clone Repository') {
+
             steps {
-                echo 'Repository cloned successfully'
+
+                git branch: 'main',
+                url: 'https://github.com/SwatiNandi/devops-resume-analyzer.git'
+
             }
+
         }
 
-        stage('Build Stage') {
+        stage('Build Docker Containers') {
+
             steps {
-                echo 'Application build successful'
+
+                sh 'docker-compose build'
+
             }
+
         }
 
-        stage('Test Stage') {
+        stage('Run Docker Containers') {
+
             steps {
-                echo 'Pipeline executed successfully'
+
+                sh 'docker-compose up -d'
+
             }
+
         }
 
     }
+
 }
