@@ -19,18 +19,14 @@ app.use(express.json());
 // TEST ROUTE
 
 app.get('/', (req, res) => {
-
     res.send('Backend Running');
-
 });
 
 
 // CHECK ROUTE
 
 app.get('/check', (req, res) => {
-
     res.send('CHECK WORKING');
-
 });
 
 
@@ -46,7 +42,10 @@ app.use('/api/upload', uploadRoutes);
 
 // MONGODB CONNECTION
 
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect('mongodb://mongodb:27017/resumeDB', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
 .then(() => console.log('MongoDB Connected'))
 .catch(err => console.log(err));
 
@@ -54,7 +53,5 @@ mongoose.connect(process.env.MONGO_URI)
 // SERVER
 
 app.listen(5000, () => {
-
     console.log('Server running on port 5000');
-
 });

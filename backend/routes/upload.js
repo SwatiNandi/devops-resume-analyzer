@@ -4,6 +4,8 @@ const axios = require('axios');
 const FormData = require('form-data');
 const fs = require('fs');
 
+const Resume = require('../models/Resume');
+
 const router = express.Router();
 
 
@@ -42,6 +44,19 @@ router.get('/check', (req, res) => {
 router.post('/resume', upload.single('resume'), async (req, res) => {
 
     try {
+
+        // SAVE TO MONGODB
+
+        const newResume = new Resume({
+
+            filename: req.file.filename
+
+        });
+
+        await newResume.save();
+
+
+        // SEND FILE TO ATS SERVICE
 
         const formData = new FormData();
 
