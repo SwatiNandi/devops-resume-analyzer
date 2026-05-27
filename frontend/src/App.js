@@ -1,4 +1,5 @@
 import React from 'react';
+
 import ResumeUpload from './pages/ResumeUpload';
 
 function App() {
@@ -15,4 +16,4 @@ function App() {
 
 }
 
-export default App;r5t
+export default App;
