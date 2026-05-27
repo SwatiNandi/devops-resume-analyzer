@@ -15,21 +15,12 @@ pipeline {
 
         }
 
-        stage('Build Success') {
+        stage('Docker Compose Build') {
 
             steps {
 
-                echo 'Project Build Successful'
-
-            }
-
-        }
-
-        stage('CI/CD Pipeline') {
-
-            steps {
-
-                echo 'Jenkins Pipeline Executed Successfully'
+                bat 'docker compose down'
+                bat 'docker compose up --build -d'
 
             }
 
