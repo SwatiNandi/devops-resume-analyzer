@@ -8,39 +8,71 @@ app = Flask(__name__)
 
 def analyze_resume():
 
-    file = request.files['resume']
+    try:
 
-    text = ""
+        file = request.files['resume']
 
-    with pdfplumber.open(file) as pdf:
+        text = ""
 
-        for page in pdf.pages:
+        with pdfplumber.open(file) as pdf:
 
-            text += page.extract_text()
+            for page in pdf.pages:
 
+                extracted = page.extract_text()
 
-    keywords = ['python', 'java', 'react', 'mongodb', 'docker']
-
-    score = 0
-
-    matched_skills = []
-
-    for skill in keywords:
-
-        if skill.lower() in text.lower():
-
-            score += 20
-            matched_skills.append(skill)
+                if extracted:
+                    text += extracted.lower()
 
 
-    return jsonify({
+        skills = [
 
-        'ATS Score': score,
-        'Matched Skills': matched_skills
+            'python',
+            'java',
+            'react',
+            'mongodb',
+            'docker',
+            'aws',
+            'jenkins'
 
-    })
+        ]
+
+        matched_skills = []
+
+        for skill in skills:
+
+            if skill in text:
+
+                matched_skills.append(skill)
+
+
+        ats_score = len(matched_skills) * 10
+
+        return jsonify({
+
+            "analysis": {
+
+                "ATS Score": ats_score,
+
+                "Matched Skills": matched_skills
+
+            }
+
+        })
+
+
+    except Exception as e:
+
+        return jsonify({
+
+            "error": str(e)
+
+        }), 500
 
 
 if __name__ == '__main__':
 
-    app.run(host='0.0.0.0', port=7000, debug=True)
+    app.run(
+        host='0.0.0.0',
+        port=7000,
+        debug=True
+    )

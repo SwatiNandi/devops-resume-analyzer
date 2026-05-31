@@ -1,32 +1,42 @@
 pipeline {
 
-    agent any
+```
+agent any
 
-    stages {
+stages {
 
-        stage('Clone Repository') {
+    stage('Clone Repository') {
 
-            steps {
+        steps {
 
-                git branch: 'main',
-                url: 'https://github.com/SwatiNandi/devops-resume-analyzer.git'
-
-            }
+            git branch: 'main',
+            url: 'https://github.com/SwatiNandi/devops-resume-analyzer.git'
 
         }
 
-        stage('Project Verification') {
+    }
 
-            steps {
+    stage('Deploy to EC2') {
 
-                echo 'GitHub Connected Successfully'
-                echo 'Jenkins Pipeline Working'
-                echo 'Dockerized ATS Resume Analyzer Ready'
+        steps {
+
+            sshagent(['ec2-key']) {
+
+                bat """
+                ssh -o StrictHostKeyChecking=no ubuntu@3.91.147.228 ^
+                "cd ~/devops-resume-analyzer && \
+                git pull origin main && \
+                sudo docker compose down && \
+                sudo docker compose up --build -d"
+                """
 
             }
 
         }
 
     }
+
+}
+```
 
 }

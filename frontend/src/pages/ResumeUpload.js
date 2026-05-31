@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import '../App.css';
 
 function ResumeUpload() {
 
@@ -8,24 +9,24 @@ function ResumeUpload() {
 
     const handleUpload = async () => {
 
-        const formData = new FormData();
+        if (!file) {
+            alert("Please choose a resume");
+            return;
+        }
 
+        const formData = new FormData();
         formData.append('resume', file);
 
         try {
 
             const response = await axios.post(
-
                 'http://localhost:5000/api/upload/resume',
-
                 formData,
-
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
                 }
-
             );
 
             setResult(response.data);
@@ -33,6 +34,7 @@ function ResumeUpload() {
         } catch (error) {
 
             console.log(error);
+            alert("Upload failed");
 
         }
 
@@ -40,61 +42,133 @@ function ResumeUpload() {
 
     return (
 
-        <div style={{ padding: '30px' }}>
+        <div className="app-shell">
 
-            <h1>ATS Resume Analyzer</h1>
+            <nav className="navbar">
+                <div className="brand">
+                    <span>ATS Resume Analyzer</span>
+                </div>
+            </nav>
 
-            <input
-                type="file"
-                onChange={(e) => setFile(e.target.files[0])}
-            />
+            <main className="main-content">
 
-            <br /><br />
+                <section className="hero">
 
-            <button onClick={handleUpload}>
-                Upload Resume
-            </button>
+                    <div className="hero-copy">
 
-            <br /><br />
+                        <span className="eyebrow">
+                            AI Powered Resume Screening
+                        </span>
 
-            {
+                        <h1>
+                            Analyze Your Resume Instantly
+                        </h1>
 
-                result && (
+                        <p>
+                            Upload your resume and get ATS score,
+                            matched skills, and screening insights
+                            in seconds.
+                        </p>
 
-                    <div>
+                        <div className="hero-actions">
 
-                        <h2>
-                            ATS Score:
-                            {result.analysis["ATS Score"]}
-                        </h2>
+                            <label
+                                htmlFor="resumeInput"
+                                className="choose-file-btn"
+                            >
+                                Choose File
+                            </label>
 
-                        <h3>Matched Skills:</h3>
+                            <input
+                                type="file"
+                                id="resumeInput"
+                                className="file-input"
+                                onChange={(e) => setFile(e.target.files[0])}
+                            />
 
-                        <ul>
+                            <span className="selected-file-name">
+                                {file ? file.name : "No file chosen"}
+                            </span>
 
-                            {
+                            <button
+                                className="upload-btn"
+                                onClick={handleUpload}
+                            >
+                                Upload & Analyze
+                            </button>
 
-                                result.analysis["Matched Skills"].map(
+                        </div>
 
-                                    (skill, index) => (
-
-                                        <li key={index}>
-                                            {skill}
-                                        </li>
-
-                                    )
-
-                                )
-
-                            }
-
-                        </ul>
+                        <div className="hello-world">
+                            Hello World!
+                        </div>
 
                     </div>
 
-                )
+                    <div className="hero-card">
 
-            }
+                        <div className="hero-stat">
+                            <strong>90+</strong>
+                            <span>ATS Compatibility Score</span>
+                        </div>
+
+                        <div className="hero-stat">
+                            <strong>10+</strong>
+                            <span>Matched Skills</span>
+                        </div>
+
+                    </div>
+
+                </section>
+
+                {
+
+                    result && (
+
+                        <section className="features">
+
+                            <div className="feature-card">
+
+                                <h2>
+                                    ATS Score:
+                                    {result.analysis["ATS Score"]}
+                                </h2>
+
+                            </div>
+
+                            <div className="feature-card">
+
+                                <h3>Matched Skills</h3>
+
+                                <ul>
+
+                                    {
+
+                                        result.analysis["Matched Skills"].map(
+                                            (skill, index) => (
+                                                <li key={index}>
+                                                    {skill}
+                                                </li>
+                                            )
+                                        )
+
+                                    }
+
+                                </ul>
+
+                            </div>
+
+                        </section>
+
+                    )
+
+                }
+
+            </main>
+
+            <footer className="footer">
+                Powered by React • Node.js • MongoDB • Docker • AWS
+            </footer>
 
         </div>
 

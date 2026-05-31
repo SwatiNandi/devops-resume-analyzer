@@ -1,13 +1,15 @@
 const express = require('express');
+const router = express.Router();
+
 const multer = require('multer');
 const axios = require('axios');
 const FormData = require('form-data');
 const fs = require('fs');
 
-const router = express.Router();
+const Resume = require('../models/Resume');
 
 
-// MULTER STORAGE
+// STORAGE CONFIG
 
 const storage = multer.diskStorage({
 
@@ -25,65 +27,95 @@ const storage = multer.diskStorage({
 
 });
 
+
+// MULTER UPLOAD
+
 const upload = multer({ storage });
 
 
-// CHECK ROUTE
+// ROUTE
 
-router.get('/check', (req, res) => {
+router.post(
 
-    res.send('UPLOAD ROUTE WORKING');
+    '/resume',
 
-});
+    upload.single('resume'),
+
+    async (req, res) => {
+
+        try {
+
+            // CREATE FORM DATA
+
+            const formData = new FormData();
+
+            formData.append(
+                'resume',
+                fs.createReadStream(req.file.path)
+            );
 
 
-// RESUME UPLOAD ROUTE
+            // SEND TO ATS SERVICE
 
-router.post('/resume', upload.single('resume'), async (req, res) => {
+            const atsResponse = await axios.post(
 
-    try {
+                'http://localhost:7000/analyze',
 
-        const formData = new FormData();
+                formData,
 
-        formData.append(
-            'resume',
-            fs.createReadStream(req.file.path)
-        );
+                {
+                    headers: formData.getHeaders()
+                }
 
-        // ATS CONTAINER API CALL
+            );
 
-        const response = await axios.post(
 
-            'http://ats:7000/analyze',
+            // GET ANALYSIS
 
-            formData,
+            const analysis = atsResponse.data.analysis;
 
-            {
-                headers: formData.getHeaders()
-            }
 
-        );
+            // SAVE TO MONGODB
 
-        res.json({
+            const savedResume = await Resume.create({
 
-            message: 'Resume analyzed successfully',
+                filename: req.file.filename,
 
-            analysis: response.data
+                score: analysis["ATS Score"],
 
-        });
+                skills: analysis["Matched Skills"]
 
-    } catch (error) {
+            });
 
-        console.log(error);
 
-        res.status(500).json({
+            // RESPONSE
 
-            error: error.message
+            res.status(200).json({
 
-        });
+                message: 'Resume analyzed successfully',
+
+                analysis,
+
+                savedResume
+
+            });
+
+        }
+
+        catch (error) {
+
+            console.log(error);
+
+            res.status(500).json({
+
+                error: 'Upload failed'
+
+            });
+
+        }
 
     }
 
-});
+);
 
 module.exports = router;
