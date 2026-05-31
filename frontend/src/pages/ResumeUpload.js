@@ -20,14 +20,14 @@ function ResumeUpload() {
         try {
 
             const response = await axios.post(
-                'axios.post('http://3.91.147.228:5000/api/upload/resume',
-                formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                }
-            );
+    'http://3.91.147.228:5000/api/upload/resume',
+    formData,
+    {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    }
+);
 
             setResult(response.data);
 
