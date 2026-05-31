@@ -59,7 +59,7 @@ router.post(
 
             const atsResponse = await axios.post(
 
-                'http://localhost:7000/analyze',
+                'http://ats:7000/analyze',
 
                 formData,
 
