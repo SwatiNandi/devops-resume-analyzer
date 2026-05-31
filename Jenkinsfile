@@ -1,40 +1,41 @@
 pipeline {
 
-agent any
+    agent any
 
-stages {
+    stages {
 
-    stage('Clone Repository') {
+        stage('Clone Repository') {
 
-        steps {
+            steps {
 
-            git branch: 'main',
-            url: 'https://github.com/SwatiNandi/devops-resume-analyzer.git'
+                git branch: 'main',
+                    url: 'https://github.com/SwatiNandi/devops-resume-analyzer.git'
+
+            }
 
         }
 
-    }
+        stage('Deploy to EC2') {
 
-    stage('Deploy to EC2') {
+            steps {
 
-        steps {
+                sshagent(['ec2-key']) {
 
-            sshagent(['ec2-key']) {
+                    sh '''
+                    ssh -o StrictHostKeyChecking=no ubuntu@3.91.147.228 "
+                    cd ~/devops-resume-analyzer &&
+                    git pull origin main &&
+                    sudo docker compose down &&
+                    sudo docker compose up --build -d
+                    "
+                    '''
 
-                bat """
-                ssh -o StrictHostKeyChecking=no ubuntu@3.91.147.228 ^
-                "cd ~/devops-resume-analyzer && \
-                git pull origin main && \
-                sudo docker compose down && \
-                sudo docker compose up --build -d"
-                """
+                }
 
             }
 
         }
 
     }
-
-}
 
 }
