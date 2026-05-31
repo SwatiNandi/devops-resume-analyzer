@@ -99,8 +99,8 @@ function ResumeUpload() {
 
                         </div>
 
-                        <div className="hello-world">
-                            Hello World!
+                        <div className="happy-learning">
+                            Happy learning!
                         </div>
 
                     </div>
