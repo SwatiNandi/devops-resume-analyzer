@@ -100,7 +100,7 @@ function ResumeUpload() {
                         </div>
 
                         <div className="hello-world">
-                            Hello World!
+                            Hello World! Version 2
                         </div>
 
                     </div>
