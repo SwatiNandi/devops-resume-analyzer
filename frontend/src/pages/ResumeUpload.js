@@ -20,7 +20,7 @@ function ResumeUpload() {
         try {
 
             const response = await axios.post(
-    'http://18.207.105.77:5000/api/upload/resume',
+    'http://13.220.20.205:5000/api/upload/resume',
     formData,
     {
         headers: {

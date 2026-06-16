@@ -22,7 +22,7 @@ pipeline {
                 sshagent(['ec2-key']) {
 
                     sh '''
-                    ssh -o StrictHostKeyChecking=no ubuntu@18.207.105.77 "
+                    ssh -o StrictHostKeyChecking=no ubuntu@13.220.20.205 "
                     cd ~/devops-resume-analyzer &&
                     git pull origin main &&
                     sudo docker compose down &&
